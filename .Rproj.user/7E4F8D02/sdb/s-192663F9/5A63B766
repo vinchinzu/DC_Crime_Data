@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#install.packages(\"leaflet\")\nlibrary(leaflet)\nhom <- d %>% filter(OFFENSE == \"ASSAULT W/DANGEROUS WEAPON\", year == 2017, month == )\nm <- leaflet(data = hom) %>% addTiles() %>%\n  addMarkers(~XBLOCK, ~YBLOCK, popup = ~as.character(hom$REPORT_DAT))\n\nm  \nqlibrary(htmlwidgets)\nsaveWidget(m, file=\"homoicide_plot.html\")\n\n###hard to loadd\n###Save and attache\n\n\n\n",
+    "created" : 1500779470533.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3826246577",
+    "id" : "5A63B766",
+    "lastKnownWriteTime" : 1509712223,
+    "last_content_update" : 1509712223410,
+    "path" : "C:/R/dc_crime_data/scripts/s005_leaflet.R",
+    "project_path" : "scripts/s005_leaflet.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

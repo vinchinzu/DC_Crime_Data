@@ -1,0 +1,9 @@
+{
+    "path" : "C:/R/dc_crime_data",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

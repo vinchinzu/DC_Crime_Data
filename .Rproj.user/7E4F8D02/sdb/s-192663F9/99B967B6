@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n#Data Downloaded from \n# http://crimemap.dc.gov/CrimeMapSearch.aspx\n# IN 8 CSV files according to Wards\n# From 01/01/2008 to present\n# \n\n#Other Geographic Area or Point\n# Wards (in drop down)\n# Ward 1\n#Select Date Range (Other) -> From: #FromDate# : To: #ToDate#\n#Search\n#Download Crime Data\n#Text (CSV)\n#Check All\n#Get Data \n\n#Add data to ../data file\n\n\nsetwd(\"scripts\")\nlibrary(readxl)\n\nfile_list <- list.files(\"../data/\")\nfile_list\n\n\nsetwd(\"../data\")\n\n#COMBINE FILES \ndataset <- NULL\nfor (file in file_list){\n  # if the merged dataset doesn't exist, create it\n  if (!exists(\"dataset\")){\n    dataset <- read.csv(file, header=TRUE, sep=\",\")\n  }\n  # if the merged dataset does exist, append to it\n  if (exists(\"dataset\")){\n    temp_dataset <-read.csv(file, header=TRUE, sep=\",\")\n    dataset<-rbind(dataset, temp_dataset)\n    rm(temp_dataset)\n  }\n}\n\n\n\n\n\n\n\n\n",
+    "created" : 1500777385789.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3028906428",
+    "id" : "99B967B6",
+    "lastKnownWriteTime" : 1509711980,
+    "last_content_update" : 1509711980891,
+    "path" : "C:/R/dc_crime_data/scripts/s000-1-gather_data.R",
+    "project_path" : "scripts/s000-1-gather_data.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

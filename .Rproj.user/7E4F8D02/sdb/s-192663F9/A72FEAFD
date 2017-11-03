@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "### Install geospatial data extraction library\n\n#install.packages(\"rgdal\")\nlibrary(rgdal)\n\n### import data\nnad83_coords <- dataset\n\n### identify coordinates in data\ncoordinates(nad83_coords) <- c('XBLOCK', 'YBLOCK')\n## identify coordinate system in data (NAD8?3, EPSG: 26985)\nproj4string(nad83_coords)=CRS(\"+init=EPSG:26985\")\n## transform coordinate system to standard lat/long (WGS82, EPSG:426)\ncoordinates_deg <- spTransform(nad83_coords,CRS(\"+init=epsg:4326\"))\n## export results; be sure to flip long and lat in results\nwrite.csv(coordinates_deg,'Export_Crime_Data.csv')\n\n\ncoordinates_deg$XBLOCK\nx <- coordinates_deg \nhead(x)\n\n",
+    "created" : 1509712030462.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1417185913",
+    "id" : "A72FEAFD",
+    "lastKnownWriteTime" : 1509712057,
+    "last_content_update" : 1509712058008,
+    "path" : "C:/R/dc_crime_data/scripts/S000-2-add_long_lat.R",
+    "project_path" : "scripts/S000-2-add_long_lat.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

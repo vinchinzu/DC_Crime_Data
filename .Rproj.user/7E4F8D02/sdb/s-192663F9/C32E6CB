@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n\nload(\"crime_flat.Rda\")\n\n\n#\n\nd %>% filter(WARD == 8) %>% group_by(year, OFFENSE) %>% count() %>% ggplot(aes(x=year, y=n, colour=OFFENSE)) + geom_line()\n\n\n\n# Split\n\nd %>% filter(WARD == 8, year==2016 | year == 2017) %>% group_by(year, month, OFFENSE) %>% count() %>% ggplot(aes(x=month, y=n, colour=OFFENSE)) + geom_line()\n\n\nView(d %>% filter(WARD == 8, year==2016 | year == 2017) %>% group_by(year, month, OFFENSE) %>% count())\n\n\nlastyear <- d %>% filter(WARD == 8, year==2016 | year == 2017) %>% mutate(year_month = paste0(year,\"-\",month))\n\n\nl <- lastyear %>% mutate(year_month = paste0(year,\"-\",month))\n\n\nl %>% select(year_month, crimetype, n)\n\nggplot(l, aes(year_month, n, colour=crimetype)) + geom_line()\n       ",
+    "created" : 1509712905449.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3299527942",
+    "id" : "C32E6CB",
+    "lastKnownWriteTime" : 1509714034,
+    "last_content_update" : 1509714034246,
+    "path" : "C:/R/dc_crime_data/scripts/S003_analysis.R",
+    "project_path" : "scripts/S003_analysis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

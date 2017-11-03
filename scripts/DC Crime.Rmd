@@ -1,0 +1,232 @@
+---
+title: "DC Crime Data Blitz"
+author: Lucas Vinze
+date: April 12, 2017
+output:
+  revealjs::revealjs_presentation:
+    theme: sky
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggmap)
+library(MASS)
+
+load("../data/crime_flat.rda")
+
+#need to add a hard copy map to display on Kaggle. 
+map <- get_map(location = "washington, dc", zoom = 12)
+
+hom <- filter(d, OFFENSE=="HOMICIDE")
+
+```
+
+# Data Summary - Built with RStudio
+
+
+
+## Where to get the data?
+
+-DC Metro Crime Data
+
+-http://crimemap.dc.gov/CrimeMapSearch.aspx#tabs-GeoOther
+
+- Easily aggregated by download by 8 geographic Wards
+- From Jan 1, 2008 to now
+- Scripts can download daily 
+
+
+## Data Totals
+
+```{r summary_table,  warning=F, message=F}
+
+dim(d)
+summary(d$OFFENSE)
+```
+
+# Demographics Vs Homicides
+
+## A Quick Look
+![Historic Published Data](Poverty-Map.jpg)
+
+
+
+## Homicides Mapped
+
+```{r homicide}
+ggmap(map) + geom_point(data = hom, aes(x = XBLOCK, y = YBLOCK, colour = METHOD))
+
+```
+
+
+
+
+## Noma Homicdes
+
+```{r noma}
+noma <- get_map(location = "Noma, dc", zoom = 15)
+ggmap(noma) + geom_point(data = hom, aes(x = XBLOCK, y = YBLOCK, colour = METHOD))
+
+```
+
+## Anacostia
+
+```{r anacostia}
+anacostia <- get_map(location = "Anacostia, DC", zoom = 14)
+ggmap(anacostia) + geom_point(data = hom, aes(x = XBLOCK, y = YBLOCK, colour = METHOD))
+
+```
+
+
+
+#Theft
+
+## Theft Mapped
+Too much to see!
+```{r theft}
+ggmap(map) + geom_point(data = hom, aes(x = XBLOCK, y = YBLOCK, colour = METHOD))
+
+```
+
+#Trends
+
+
+##crimes per year
+```{r}
+d %>% subset(year < 2017) %>% group_by(year) %>% summarize(total = n()) %>%
+  ggplot(aes(x=year, y = total)) + geom_line(size=2) + scale_x_continuous()
+```  
+
+##Stacked Plot
+```{r}
+d %>%  subset(year < 2017) %>%  group_by(year,OFFENSE) %>% summarize(total = n()) %>% 
+ ggplot(aes(x = year, y = total, fill = OFFENSE)) + geom_area(position = 'stack') + 
+  scale_x_continuous()
+```
+
+##Facet Grid by Crime
+```{r}
+d %>% filter(year < 2017) %>% group_by(year, OFFENSE) %>% summarize(total = n()) %>%
+  ggplot(aes(x=year, y = total)) + geom_line(size=1.1) + facet_wrap(~OFFENSE, scales="free_y")
+```
+
+##Facet Grid by Quadrant
+
+![image](quadrant_facet.jpeg)
+```{r, warning=F}
+#Split by Horizontal lines -> 
+
+#load("quad.rda")
+#ggplot(quadrant,aes(x=year, y = total, colour = quad)) + geom_line(size=1.1) + #facet_wrap(~OFFENSE, scales="free_y")
+
+```
+
+## Facet Grid Code
+
+```{r echo=T}
+
+
+#Facet Grid by Crime
+d %>% filter(year < 2017) %>% group_by(year, OFFENSE) %>% summarize(total = n()) %>%
+  ggplot(aes(x=year, y = total)) + geom_line(size=1.1) + facet_wrap(~OFFENSE, scales="free_y")
+
+
+#Facet Grid with Quadrant
+d  %>% group_by(hour, OFFENSE, quad) %>% summarize(total = n()) %>%
+  ggplot(aes(x=hour, y = total, colour = quad)) + geom_line() + facet_wrap(~OFFENSE,  scales="free_y")
+
+```
+
+
+
+#When are crimes reported? 
+
+##  Time of Day
+
+```{r}
+
+time <- d  %>% group_by(hour, OFFENSE) %>% summarize(total = n())
+
+ggplot(time, aes(x=hour, y = total,  fill = OFFENSE)) + geom_bar(stat="identity")
+
+```
+
+## Theft only
+
+```{r}
+
+theft <- d %>% filter(OFFENSE == "THEFT F/AUTO" | OFFENSE == "THEFT/OTHER") %>%
+  group_by(hour, OFFENSE) %>% summarize(total = n())
+
+
+theft_day <- filter(theft ,hour > 8)
+ggplot(theft_day, aes(x=hour, y = total, fill = OFFENSE)) + geom_bar(stat="identity")
+
+
+
+ggplot(theft_day, aes(x=hour, y = total, colour = OFFENSE)) + geom_line()
+
+```
+
+## Split by DC quadrant
+
+```{r}
+
+ d  %>% group_by(hour, OFFENSE, quad) %>% summarize(total = n()) %>%
+    ggplot(aes(x=hour, y = total, colour = quad)) + geom_line() + facet_wrap(~OFFENSE,  scales="free_y")
+```
+ 
+ 
+
+
+#Interactive Mapping
+
+##With Zoom
+-Leaflet library for interactivity
+-Add graphical layers & popup info
+-Best rendered with Server 
+
+![image](leaflet.png)
+
+#Heat Maps
+
+## Using density plots
+
+```{r}
+
+
+LatLonCounts <- as.data.frame(table(round(hom$XBLOCK,2), round(hom$YBLOCK,2)))
+
+LatLonCounts$Long <- as.numeric(as.character(LatLonCounts$Var1))
+LatLonCounts$Lat <- as.numeric(as.character(LatLonCounts$Var2))
+
+
+ggmap(map) + geom_point(data = LatLonCounts, aes(x = Long, y = Lat, color = Freq, size = Freq)) + scale_color_gradient(low = "yellow", high = "red")
+
+```
+
+
+## Add Geometric tiles
+
+```{r}
+LatLonCounts2 <- subset(LatLonCounts, Freq > 0)
+ggmap(map) + geom_tile(data = LatLonCounts2, aes(x = Long, y = Lat, alpha = Freq), fill = "red")
+
+```
+
+
+## Contour plot
+
+```{r}
+
+ggmap(map) +
+  geom_tile(aes(x = XBLOCK, y = YBLOCK), data = hom) +
+  scale_fill_identity() +
+  geom_density2d(aes(x = XBLOCK, y = YBLOCK, colour = ..level..), 
+                 bins = I(10), fill = NA, alpha = I(1/2), size = I(.75), data = hom)
+
+```
+

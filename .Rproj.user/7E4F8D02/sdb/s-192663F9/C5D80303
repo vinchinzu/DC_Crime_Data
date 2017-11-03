@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1509713393313.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C5D80303",
+    "lastKnownWriteTime" : 3419473789575321445,
+    "last_content_update" : 1509713393313,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "D1F1EFF9",
+        "caption" : "d %>% filter(WARD == 8, year == 2016 | year == 2017) %>% group_by(year, ",
+        "contentUrl" : "grid_resource/gridviewer.html?env=_rs_no_env&obj=&cache_key=D1F1EFF9",
+        "displayedObservations" : 183,
+        "environment" : "_rs_no_env",
+        "object" : "",
+        "preview" : 0,
+        "totalObservations" : 183,
+        "variables" : 4
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

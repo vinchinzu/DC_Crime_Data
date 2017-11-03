@@ -1,0 +1,6 @@
+"0","map <- get_map(location = ""washington, dc"", zoom = 12)
+"
+"2","Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=washington,+dc&zoom=12&size=640x640&scale=2&maptype=terrain&language=en-EN&sensor=false
+"
+"2","Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=washington,%20dc&sensor=false
+"
